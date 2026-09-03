@@ -17,7 +17,7 @@ r1_approx = (56+approx_sqrt)/(2*a)
 r2_approx = (56-approx_sqrt)/(2*a)
 
 rel_err_r1 = abs(r1_approx-r1_true)/abs(r1_true)
-rel_err_r2 = abs(r2_approx-r2_true)/abs(r1_approx)
+rel_err_r2 = abs(r2_approx-r2_true)/abs(r2_approx)
 
 print("True r1:", r1_true, ", True r2:", r2_true)
 print("Approx r1:", r1_approx, ", Approx r2:", r2_approx)
