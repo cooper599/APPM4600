@@ -41,3 +41,6 @@ plt.show()
 
 print("Taylor exp Difference when x = pi:", diff_myalg_pi)
 print("Taylor exp Difference when x = 10^6:", diff_myalg_106)
+
+print("Difference when x = 10^6:", diff_106)
+print("Taylor exp Difference when x = 10^6:", diff_myalg_106)
