@@ -24,14 +24,13 @@ import numpy as np
 
 def driver():
 
-# Prelab stuff
+# Prelab stuff SECTION 2
      f1 = lambda x: (10/(x+4))**(1/2)
      p = 1.3652300134140976 # actual fixed point
 
      Nmax = 100
      tol = 1e-10
 
-# test f1 '''
      p0 = 1.5
      [xstar,ier, x_arr, count] = fixedpt(f1,p0,tol,Nmax)
      print('the approximate fixed point is:',xstar)
@@ -42,16 +41,38 @@ def driver():
      [alpha,const] = computeConvergence(x_arr, p)
      print("Alpha = ", alpha) # alpha = 0.999836
      print("Const = ", const)
-
      '''
      Part 2 questions; num iteration = 12 using abs tolerance
      alpha = 1.0000003318338138
-     Constant = 
+     Constant = 0.1272300010325035
      '''
 
+     ## SECTION 3 STUFF
+     # Section 3.2
+     convertedVec = seqToVec(x_arr, tol, Nmax) # Aitkins acceleration conversion
+     [alpha,const] = computeConvergence(convertedVec,p) # Recompute alpha and const
+     print("Alpha = ", alpha)
+
+'''
+Write a subroutine that takes in a sequence of approximations and returns a vector of the
+approximations. It should also have tolerance and max number of iterations as input.
+• Apply Aitken’s ∆2 method to the sequence created by the fixed point iteration in the before
+lab exercise set. Determine if the convergence is in fact faster than the fixed point iteration.
+Can you figure out the order of convergence?
+'''
+def seqToVec(p_seq, tol, Nmax):
+    nmax = len(p_seq) - 2 # max index for the conversion
+    p_vec = np.array((nmax,1)) # preallocate
+    # loop trhough to create vector of new approximations
+    for i in range(nmax):
+        print("i",i)
+        num = (p_seq[i+1]-p_seq[i])**2
+        den = p_seq[i+2] - 2*p_seq[i+1] + p_seq[i]
+        p_vec[i] = p_seq[i] - num/den
+    return p_vec
 
 
-# define routines
+# Fixed pt calculation routine
 def fixedpt(f,x0,tol,Nmax):
 
     ''' x0 = initial guess''' 
@@ -75,11 +96,11 @@ def fixedpt(f,x0,tol,Nmax):
     return [xstar, ier, x_arr, count]
     
 
-# for i up to count
+# Function to compute convergence
 def computeConvergence(pk_arr, p):
     # modify pk_arr to be list of only the relevant values
     modpk = pk_arr[pk_arr != 0]
-    # Convert to integer
+    # Convert middle term but not last to integer, should probably have a check
     mid_k = np.floor(len(modpk)/2).astype(int) 
 
     eps_k = abs(modpk[mid_k]-p)
@@ -90,6 +111,5 @@ def computeConvergence(pk_arr, p):
     alpha = num/den
     const = abs(eps_k)/(abs(eps_km1))**alpha
     return [alpha,const]
-
 
 driver()
