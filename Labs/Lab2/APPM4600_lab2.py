@@ -61,11 +61,12 @@ lab exercise set. Determine if the convergence is in fact faster than the fixed 
 Can you figure out the order of convergence?
 '''
 def seqToVec(p_seq, tol, Nmax):
+    p_seq = p_seq[p_seq != 0]
     nmax = len(p_seq) - 2 # max index for the conversion
-    p_vec = np.array((nmax,1)) # preallocate
+    p_vec = np.zeros((nmax,1)) # preallocate
     # loop trhough to create vector of new approximations
     for i in range(nmax):
-        print("i",i)
+        print("pseq i",p_seq[i])
         num = (p_seq[i+1]-p_seq[i])**2
         den = p_seq[i+2] - 2*p_seq[i+1] + p_seq[i]
         p_vec[i] = p_seq[i] - num/den
