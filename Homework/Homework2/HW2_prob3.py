@@ -15,3 +15,5 @@ print(x**2/6)
 
 P = lambda x: x + x**2/2
 print(f"Taylor approximation of e^x - 1: {P(x):.16e}")
+rel_err = abs(P(x)-alg_y)/P(x)
+print("Relative function errors b/w alg and Taylor approx: ", rel_err)

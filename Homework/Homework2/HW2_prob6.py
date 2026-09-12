@@ -13,14 +13,14 @@ b = 5
 numpts = 100
 x = np.linspace(a,b,numpts)
 
-# plt.plot(x,f(x))
-# plt.axhline(0, color="black", linewidth = 1)
-# plt.axvline(0, color="black", linewidth = 1)
-# plt.xlabel("x")
-# plt.ylabel("y")
-# plt.title("Plot of x-4sin(2x)-3 showing all roots")
-# plt.axis("on")
-# plt.show()
+plt.plot(x,f(x))
+plt.axhline(0, color="black", linewidth = 1)
+plt.axvline(0, color="black", linewidth = 1)
+plt.xlabel("x")
+plt.ylabel("y")
+plt.title("Plot of x-4sin(2x)-3 showing all roots")
+plt.axis("on")
+plt.show()
 
 ## Part b
 # From code provided in class
