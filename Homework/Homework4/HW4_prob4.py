@@ -40,6 +40,7 @@ def calcError(p,alpha):
     all_err = abs(p-alpha)
     val_err = all_err > 1.e-16 # floor to prevent log(0)
     err = all_err[val_err]
+    print("Error table for each root: ", err)
     ek = err[:-1] # first to second last
     ekp1 = err[1:] # second to last 
     return [ek, ekp1]
