@@ -12,11 +12,18 @@ def driver():
     Nmax = 100
     tol = 1.e-12
 
+    alpha = 3.7330793798506652 # root approx to check order of convergence
+
     print('--------------------')
     (p,pstar,info,it) = newton(f,fp,p0,tol, Nmax)
     print('the approximate root is', '%16.16e' % pstar)
     print('the error message reads:', '%d' % info)
     print('Number of iterations:', '%d' % it)
+    k = 15
+    e_curr = abs(p[k+1] - alpha)
+    e_prev = abs(p[k] - alpha)
+    estimated_p = np.log(e_curr) / np.log(e_prev)
+    print(f'Estimated order of convergence p: {estimated_p:.2f}')
     print('--------------------')
 
     m = 3
@@ -24,12 +31,22 @@ def driver():
     print('the approximate root is', '%16.16e' % pstar)
     print('the error message reads:', '%d' % info)
     print('Number of iterations:', '%d' % it)
+    k = 1
+    e_curr = abs(p[k+1] - alpha)
+    e_prev = abs(p[k] - alpha)
+    estimated_p = np.log(e_curr) / np.log(e_prev)
+    print(f'Estimated order of convergence p: {estimated_p:.2f}')
     print('--------------------')
 
     (p,pstar,info,it) = newton_gofx(f,fp,fpp,p0,tol, Nmax)
     print('the approximate root is', '%16.16e' % pstar)
     print('the error message reads:', '%d' % info)
     print('Number of iterations:', '%d' % it)
+    k = 2
+    e_curr = abs(p[k+1] - alpha)
+    e_prev = abs(p[k] - alpha)
+    estimated_p = np.log(e_curr) / np.log(e_prev)
+    print(f'Estimated order of convergence p: {estimated_p:.2f}')
     print('--------------------')
     
 
