@@ -16,6 +16,7 @@ def driver():
     print("z star: ", xstar[2])
     print("Error Message: ", ier)
     print("Num Its: ", nit)
+    print()
 
     error(hist,xstar)
 
