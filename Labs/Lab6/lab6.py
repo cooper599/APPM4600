@@ -59,7 +59,7 @@ def driver():
         print("Error message: ", ierLN3)
         print("Num Iterations: ", itsLN3)
     if lab:
-        x0 = [1,0]
+        x0 = [1.0,0.0]
         tol = 1e-10
         Nmax = 100
 
@@ -74,23 +74,25 @@ def driver():
         print()
 
         ts2 = time.perf_counter()
-        [xstar,ier,its] = LazyNewton(x0,tol,Nmax)
+        for i in range(60):
+            [xstar,ier,its] = LazyNewton(x0,tol,Nmax)
         te2 = time.perf_counter()
         print("Lazy Newton:")
         print("xstar: ", xstar)
         print("Error message: ", ier)
         print("Num iterations: ", its)
-        print("Time: ", te2-ts2)
+        print("Time: ", (te2-ts2)/60)
         print()
 
         ts3 = time.perf_counter()
-        [xstar,ier,its] = SlackerNewton(x0,tol,Nmax)
+        for i in range(60):
+            [xstar,ier,its] = SlackerNewton(x0,tol,Nmax)
         te3 = time.perf_counter()
         print("Slacker Newton:")
         print("xstar: ", xstar)
         print("Error message: ", ier)
         print("Num iterations: ", its)
-        print("Time: ", te3-ts3)
+        print("Time: ", (te3-ts3)/60)
 
 # Function for system
 def evalF(x):
@@ -128,7 +130,8 @@ def SlackerNewton(x0,tol,Nmax):
            ier = 0
            return[xstar, ier,its]
        # Gets exponent of tolerance, updates everytime the difference is greater than half of tolerance
-       if (norm(x1-x0) > (np.floor(np.log10(tol))/2)):
+       # tol 1e-10, check if difference greater than 1e-5
+       if (norm(x1-x0) > 10**(np.floor(np.log10(tol))/2)):
            J = evalJ(x1)
            Jinv = inv(J)
        x0 = x1   
