@@ -12,6 +12,8 @@ def driver():
 def interp(N):
     h = 2.0 / (N-1)
     xi = -1.0 + np.arange(N) * h
+    # j = np.arange(1, N + 1)
+    # xi = np.cos((2 * j - 1) * np.pi / (2 * N))
     yi = 1.0 / (1.0 + (10 * xi)**2)
 
     V = np.vander(xi,N)
