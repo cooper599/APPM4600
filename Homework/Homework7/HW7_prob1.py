@@ -1,4 +1,4 @@
-## APPM4600 Homework 7
+## APPM4600 Homework 7, Prob 1
 # Cooper Wark
 
 import numpy as np
@@ -29,6 +29,7 @@ def interp(N):
     plt.plot(xfine,pfine,label="p(x) approximation")
     plt.xlabel("x")
     plt.ylabel("y")
+    plt.title("f(x) vs monomial p(x) approx using Vandermonde")
     plt.legend()
     plt.show()
 
