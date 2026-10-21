@@ -7,12 +7,81 @@ from numpy.linalg import norm
 from numpy.linalg import inv
 
 def driver():
+    ''' Did have to lookup how to setup subplots so it was easier to display information at once, and just copy/pasted code for the
+    error stuff and changed a coupel thing didn't recode whole thing'''
+    Nvals = [5,10,15,20]
+    fig, axs = plt.subplots(2,2,sharex=True)
+    axs = axs.flatten()
+    for idx,N in enumerate(Nvals):
+       run_interp(N,axs[idx])
+    plt.tight_layout()
+    plt.legend()
+    plt.show()
+
+    fig2, axs = plt.subplots(2,2,sharex=True)
+    axs = axs.flatten()
+    for idx, N in enumerate(Nvals):
+       run_error(N,axs[idx])
+    plt.suptitle("Abs Err")
+    plt.tight_layout()
+    plt.legend()
+    plt.show()
+
+def run_error(N,ax):
+    f = lambda x: 1.0/(1.0+x**2)
+    fp = lambda x: -2*x/(1.0+x**2)**2
+    a, b = -5, 5
+    xint = np.linspace(a, b, N+1)
+    
+    yint = np.zeros(N+1)
+    ypint = np.zeros(N+1)
+    for i in range(N+1):
+       yint[i] = f(xint[i])
+       ypint[i] = fp(xint[i])
+
+    Neval = 1000
+    xeval = np.linspace(a, b, Neval+1)
+    yeval_Lagrange = np.zeros(Neval+1)
+    yeval_Hermite = np.zeros(Neval+1)
+    fex = np.zeros(Neval + 1)
+    
+    for ii in range(Neval + 1):
+        yeval_Lagrange[ii] = eval_lagrange(xeval[ii], xint, yint, N)
+        yeval_Hermite[ii] = eval_hermite(xeval[ii], xint, yint, ypint, N)
+        fex[ii] = f(xeval[ii])
+
+    (M, C, D) = create_natural_spline(yint, xint, N)
+    yeval_NatCubSpl = eval_cubic_spline(xeval, Neval, xint, N, M, C, D)
+
+    yp_b = np.zeros(2)
+    yp_b[0] = fp(xint[0])
+    yp_b[1] = fp(xint[N])
+    (Mc, Cc, Dc) = create_clamped_spline(yint, yp_b, xint, N)
+    yeval_ClaCubSpl = eval_cubic_spline(xeval, Neval, xint, N, Mc, Cc, Dc)
+
+    # Calculate abs err
+    err_Lagrange = np.abs(yeval_Lagrange - fex)
+    err_Hermite  = np.abs(yeval_Hermite - fex)
+    err_Natural  = np.abs(yeval_NatCubSpl - fex)
+    err_Clamped  = np.abs(yeval_ClaCubSpl - fex)
+
+    ax.plot(xeval, err_Lagrange, label="Lagrange Interp. Error")
+    ax.plot(xeval, err_Hermite, label="Hermite Interp. Error")
+    ax.plot(xeval, err_Natural, label="Natural Spline Interp. Error")
+    ax.plot(xeval, err_Clamped, label="Clamped Spline Interp. Error")
+
+    ax.set_yscale('log')
+    ax.set_xlabel("x")
+    ax.set_ylabel("Absolute Error |P(x) - f(x)|")
+    ax.set_title(f"N = {N}")
+   
+def run_interp(N,ax):
     # Fncts
     f = lambda x: 1.0/(1.0+x**2)
     fp = lambda x: -2*x/(1.0+x**2)**2
 
     # Parms
-    N = 5 # num nodes
+    # N = 5 # num nodes
     a = -5
     b = 5
 
@@ -50,19 +119,19 @@ def driver():
     yeval_ClaCubSpl = eval_cubic_spline(xeval,Neval,xint,N,Mc,Cc,Dc)
 
 
-    plt.figure()
-    plt.plot(xeval,fex,label="Function")
-    plt.plot(xeval,yeval_Lagrange,label="Lagrange Interp.")
-    plt.plot(xeval,yeval_Hermite,label="Hermite Interp.")
-    plt.plot(xeval,yeval_NatCubSpl,label="Natural Cubic Spline Interp.")
-    plt.plot(xeval,yeval_ClaCubSpl,label="Clamped Cubic Spline Interp.")
+    # plt.figure()
+    ax.plot(xeval,fex,label="Function")
+    ax.plot(xeval,yeval_Lagrange,label="Lagrange Interp.")
+    ax.plot(xeval,yeval_Hermite,label="Hermite Interp.")
+    ax.plot(xeval,yeval_NatCubSpl,label="Natural Cubic Spline Interp.")
+    ax.plot(xeval,yeval_ClaCubSpl,label="Clamped Cubic Spline Interp.")
 
-    plt.xlabel("x")
-    plt.ylabel("f(x)/y")
-    plt.title(f"Comparison of Interpolation Methods w/ Nint={N}")
-    plt.legend(loc = "best")
-    plt.ylim([-1,2])
-    plt.show()
+    ax.set_xlabel("x")
+    ax.set_ylabel("f(x)/y")
+    ax.set_title(f"N = {N}")
+    # ax.legend(loc = "best",fontsize="small")
+    # ax.ylim([-1,2])
+    # ax.show()
 
 def eval_lagrange(xeval,xint,yint,N):
     lj = np.ones(N+1)
