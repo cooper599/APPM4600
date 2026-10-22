@@ -24,9 +24,9 @@ def driver():
     a = -1
     b = 1
 # weight function    
-    # w = lambda x: 1.
+    w = lambda x: 1.
     # 3.3 excersise weight fnct
-    w = lambda x: 1/np.sqrt(1.-x**2)
+    # w = lambda x: 1/np.sqrt(1.-x**2)
 
 # order of approximation
     n = 2
@@ -61,16 +61,19 @@ def eval_legendre_expansion(f,a,b,w,n,x):
 
 #  Evaluate all the Legendre polynomials at x that are needed
 # by calling your code from prelab 
+
 # orig
-#   p = eval_legendre(n,x)
+  p = eval_legendre(n,x)
 # chebshev
-  p = eval_chebyshev(n,x)
+#   p = eval_chebyshev(n,x)
+
   # initialize the sum to 0 
   pval = 0.0    
   for j in range(0,n+1):
       # make a function handle for evaluating phi_j(x)
-    #   phi_j = lambda x: eval_legendre(j,x)[j]
-      phi_j = lambda x: eval_chebyshev(j,x)[j]
+      phi_j = lambda x: eval_legendre(j,x)[j]
+    #   phi_j = lambda x: eval_chebyshev(j,x)[j]
+
       # make a function handle for evaluating phi_j^2(x)*w(x)
       phi_j_sq = lambda x: phi_j(x)**2 * w(x)
       # use the quad function from scipy to evaluate normalizations
@@ -91,7 +94,7 @@ def eval_legendre(n,x):
         phi[1] = x
     for i in range (2,n+1):
         k = i-1 # i starts at 2, k starts at 1. Sets k to n since i to n+1, k = n+1-1 = n
-        phi[i] = 1.0/(k+1) * ((2*k+1)*x*phi[k]-k*phi[k-1])
+        phi[i] = 1.0/(k+1) * ((2*k+1.0)*x*phi[k]-k*phi[k-1])
     return phi
 
 def eval_chebyshev(n,x):
