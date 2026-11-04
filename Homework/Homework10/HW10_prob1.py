@@ -9,8 +9,14 @@ def driver():
     b = np.pi
     I_ex = -12.070346316389632 # Exact value of integral
     tol = 1e-10
+    # initial n start at lowest possible
     n_trap = 2
     n_simp = 2
+    # stuff for plotting
+    h_trap = []
+    h_simp = []
+    err_trap = []
+    err_simp = []
 
     I_est_trap = 0
     rerr_trap = calcRelErr(I_est_trap,I_ex)
@@ -19,6 +25,8 @@ def driver():
         n_trap = 2*n_trap
         I_est_trap = CompTrap(a,b,n_trap,f)
         rerr_trap = calcRelErr(I_est_trap,I_ex)
+        h_trap.append((b-a)/n_trap)
+        err_trap.append(np.abs(I_ex-I_est_trap))
 
     rerr_trap = calcRelErr(I_est_trap,I_ex)
     print("I estimate trapezoidal:", I_est_trap)
@@ -33,11 +41,20 @@ def driver():
         n_simp = 2*n_simp
         I_est_simp = CompSimp(a,b,n_simp,f)
         rerr_simp = calcRelErr(I_est_simp,I_ex)
+        h_simp.append((b-a)/n_simp)
+        err_simp.append(np.abs(I_ex-I_est_simp))
 
     rerr_simp = calcRelErr(I_est_simp,I_ex)
     print("I estimate simpson:", I_est_simp)
     print("Relative Error: ", rerr_simp)
     print("n simp (how many factors of 2)", n_simp)
+
+    plt.loglog(h_trap,err_trap,label="Trapezoidal Error")
+    plt.loglog(h_simp,err_simp,label="Simpson's Error")
+    plt.xlabel("h")
+    plt.ylabel("Absolute Error")
+    plt.legend()
+    plt.show()
 
 def CompTrap(a,b,n,f):
     h = (b-a)/n
